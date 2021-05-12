@@ -5,6 +5,7 @@ using day6_8.Repository.Common;
 using day6_8.Model.Common;
 using day6_8.Model;
 using System.Data.SqlClient;
+using AutoMapper;
 
 namespace day6_8.Repository
 {
@@ -13,10 +14,16 @@ namespace day6_8.Repository
         private static readonly string ConnString = "Data Source=.;Initial Catalog=day5;Integrated Security=True";
         private static readonly SqlConnection myConnection = new SqlConnection(ConnString);
         private static SqlDataReader reader;
+        private readonly IMapper mapper;
+
+        public UserRepository(IMapper mapper)
+        {
+            this.mapper = mapper;
+        }
 
         public async Task<IUser> PullDataAsync(Guid id)
         {
-            IUser User = null;
+            UserEntity User = null;
 
             SqlCommand sqlCmd = new SqlCommand("SELECT * FROM Users WHERE id='" + id + "'");
             sqlCmd.Connection = myConnection;
@@ -26,18 +33,18 @@ namespace day6_8.Repository
 
             while (await reader.ReadAsync())
             {
-                User = new User();
+                User = new UserEntity();
                 User.Id = reader.GetGuid(0);
                 User.Name = reader.GetValue(1).ToString();
                 User.Account = new Account(reader.GetGuid(2));
             }
             myConnection.Close();
-            return User;
+            return mapper.Map<IUser>(User);
         }
 
         public async Task<List<IUser>> PullAllDataAsync()
         {
-            List<IUser> Users = new List<IUser>();
+            List<UserEntity> Users = new List<UserEntity>();
 
             SqlCommand sqlCmd = new SqlCommand("SELECT * FROM Users");
             sqlCmd.Connection = myConnection;
@@ -47,10 +54,10 @@ namespace day6_8.Repository
 
             while (await reader.ReadAsync())
             {
-                Users.Add(new User(reader.GetGuid(0), reader.GetValue(1).ToString(), new Account(reader.GetGuid(2))));
+                Users.Add(new UserEntity(reader.GetGuid(0), reader.GetValue(1).ToString(), new Account(reader.GetGuid(2))));
             }
             myConnection.Close();
-            return Users;
+            return mapper.Map<List<IUser>>(Users);
         }
 
         /* No need to check if user id already exists in database since it is setup on database to be a 
@@ -122,6 +129,22 @@ namespace day6_8.Repository
             reader = await sqlCmd.ExecuteReaderAsync();
             myConnection.Close();
             return "ok";
+        }
+    }
+
+    public class UserEntity
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public IAccount Account { get; set; }
+
+        public UserEntity() { }
+
+        public UserEntity(Guid id, string name, Account acc)
+        {
+            this.Id = id;
+            this.Name = name;
+            this.Account = acc;
         }
     }
 }

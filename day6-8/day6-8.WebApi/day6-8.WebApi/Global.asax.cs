@@ -7,9 +7,9 @@ using System.Web;
 using System.Web.Http;
 using System.Reflection;
 using System.Web.Routing;
-using day6_8.Service.Common;
 using day6_8.Service;
 using day6_8.Repository;
+using day6_8.WebApi.Models;
 
 namespace day6_8.WebApi
 {
@@ -28,7 +28,7 @@ namespace day6_8.WebApi
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterModule(new ServiceModule());
             builder.RegisterModule(new RepositoryModule());
-
+            builder.RegisterModule(new AutoMapperModule());
 
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);

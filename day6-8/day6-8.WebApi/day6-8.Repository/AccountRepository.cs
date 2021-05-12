@@ -5,6 +5,7 @@ using day6_8.Repository.Common;
 using day6_8.Model.Common;
 using day6_8.Model;
 using System.Data.SqlClient;
+using AutoMapper;
 
 namespace day6_8.Repository
 {
@@ -13,10 +14,16 @@ namespace day6_8.Repository
         private static readonly string ConnString = "Data Source=.;Initial Catalog=day5;Integrated Security=True";
         private static readonly SqlConnection myConnection = new SqlConnection(ConnString);
         private static SqlDataReader reader;
+        private readonly IMapper mapper;
+
+        public AccountRepository(IMapper mapper)
+        {
+            this.mapper = mapper;        
+        }
 
         public async Task<IAccount> PullDataAsync(Guid id)
         {
-            IAccount account = null;
+            AccountEntity account = null;
 
             SqlCommand sqlCmd = new SqlCommand("SELECT * FROM Accounts WHERE accNum='" + id + "'");
             sqlCmd.Connection = myConnection;
@@ -26,18 +33,18 @@ namespace day6_8.Repository
 
             while (await reader.ReadAsync())
             {
-                account = new Account();
+                account = new AccountEntity();
                 account.AccountNum = reader.GetGuid(0);
                 account.Details = reader.GetValue(1).ToString();
                 account.Status = reader.GetValue(2).ToString();
             }
             myConnection.Close();
-            return account;
+            return mapper.Map<IAccount>(account);
         }
 
         public async Task<List<IAccount>> PullAllDataAsync()
         {
-            List<IAccount> accounts = new List<IAccount>();
+            List<AccountEntity> accounts = new List<AccountEntity>();
 
             SqlCommand sqlCmd = new SqlCommand("SELECT * FROM Accounts");
             sqlCmd.Connection = myConnection;
@@ -47,10 +54,10 @@ namespace day6_8.Repository
 
             while (await reader.ReadAsync())
             {
-                accounts.Add(new Account(reader.GetGuid(0), reader.GetValue(1).ToString(), reader.GetValue(2).ToString()));
+                accounts.Add(new AccountEntity(reader.GetGuid(0), reader.GetValue(1).ToString(), reader.GetValue(2).ToString()));
             }
             myConnection.Close();
-            return accounts;
+            return mapper.Map<List<IAccount>>(accounts);
         }
 
         /* No need to check if account number already exists in database since it is setup on database to be a 
@@ -125,6 +132,22 @@ namespace day6_8.Repository
             reader = await sqlCmd.ExecuteReaderAsync();
             myConnection.Close();
             return "ok";
+        }
+    }
+
+    public class AccountEntity
+    {
+        public Guid AccountNum { get; set; }
+        public string Details { get; set; }
+        public string Status { get; set; }
+
+        public AccountEntity() { }
+
+        public AccountEntity(Guid acc, string det, string stat)
+        {
+            this.AccountNum = acc;
+            this.Details = det;
+            this.Status = stat;
         }
     }
 }

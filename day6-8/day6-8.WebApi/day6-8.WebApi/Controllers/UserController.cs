@@ -7,16 +7,19 @@ using System.Web.Http;
 using day6_8.Model.Common;
 using day6_8.Model;
 using day6_8.Service.Common;
+using AutoMapper;
 
 namespace day6_8.WebApi.Controllers
 {
     public class UserController : ApiController
     {
         protected IUserService UserService { get; set; }
+        private readonly IMapper mapper;
 
-        public UserController(IUserService service)
+        public UserController(IUserService service, IMapper mapper)
         {
             this.UserService = service;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -27,7 +30,7 @@ namespace day6_8.WebApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound, "User doesn't exist");
             }
-            return Request.CreateResponse(HttpStatusCode.OK, user);
+            return Request.CreateResponse(HttpStatusCode.OK, mapper.Map<UserRest>(user));
         }
 
         [HttpGet]
@@ -38,13 +41,13 @@ namespace day6_8.WebApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound, "No Entries");
             }
-            return Request.CreateResponse(HttpStatusCode.OK, users);
+            return Request.CreateResponse(HttpStatusCode.OK, mapper.Map<List<UserRest>>(users));
         }
 
         [HttpPost]
-        public async Task<HttpResponseMessage> PostUser([FromBody] User data)
+        public async Task<HttpResponseMessage> PostUser([FromBody] UserRest data)
         {
-            string response = await UserService.InsertUserAsync(data);
+            string response = await UserService.InsertUserAsync(mapper.Map<IUser>(data));
             if (response == "invalid")
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Wrong Input");
@@ -53,9 +56,9 @@ namespace day6_8.WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<HttpResponseMessage> UpdateUser(Guid id, [FromBody] User data)
+        public async Task<HttpResponseMessage> UpdateUser(Guid id, [FromBody] UserRest data)
         {
-            string response = await UserService.UpdateUserAsync(id, data);
+            string response = await UserService.UpdateUserAsync(id, mapper.Map<IUser>(data));
             if (response == "invalid")
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Wrong Input");
@@ -77,5 +80,10 @@ namespace day6_8.WebApi.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, "Delete Successful");
         }
+    }
+    public class UserRest
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
     }
 }

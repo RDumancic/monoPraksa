@@ -5,20 +5,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using day6_8.Model.Common;
-using day6_8.Model;
 using day6_8.Service.Common;
+using AutoMapper;
 
 namespace day6_8.WebApi.Controllers
 {
     public class AccountController : ApiController
     {
         protected IAccountService AccountService { get; set; }
+        private readonly IMapper mapper;
 
-        public AccountController() { }
-
-        public AccountController(IAccountService service)
+        public AccountController(IAccountService service, IMapper mapper)
         {
             this.AccountService = service;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -29,7 +29,7 @@ namespace day6_8.WebApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound, "Account doesn't exist");
             }
-            return Request.CreateResponse(HttpStatusCode.OK, account);
+            return Request.CreateResponse(HttpStatusCode.OK, mapper.Map<AccountRest>(account));
         }
 
         [HttpGet]
@@ -40,13 +40,13 @@ namespace day6_8.WebApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound, "No Entries");
             }
-            return Request.CreateResponse(HttpStatusCode.OK, accounts);
+            return Request.CreateResponse(HttpStatusCode.OK, mapper.Map<List<AccountRest>>(accounts));
         }
 
         [HttpPost]
-        public async Task<HttpResponseMessage> PostAccount([FromBody] Account data)
+        public async Task<HttpResponseMessage> PostAccount([FromBody] AccountRest data)
         {
-            string response = await AccountService.InsertAccountAsync(data);
+            string response = await AccountService.InsertAccountAsync(mapper.Map<IAccount>(data));
             if (response == "invalid")
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Wrong Input");
@@ -55,9 +55,9 @@ namespace day6_8.WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<HttpResponseMessage> UpdateAccount(Guid id, [FromBody] Account data)
+        public async Task<HttpResponseMessage> UpdateAccount(Guid id, [FromBody] AccountRest data)
         {
-            string response = await AccountService.UpdateAccountAsync(id, data);
+            string response = await AccountService.UpdateAccountAsync(id, mapper.Map<IAccount>(data));
             if (response == "invalid")
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Wrong Input");
@@ -79,5 +79,11 @@ namespace day6_8.WebApi.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, "Delete Successful");
         }
+    }
+
+    public class AccountRest
+    {
+        public string Details { get; set; }
+        public string Status { get; set; }
     }
 }
