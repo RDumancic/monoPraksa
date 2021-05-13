@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using day6_8.Model.Common;
-using day6_8.Model;
+using day6_8.Common;
 using day6_8.Service.Common;
 using AutoMapper;
 
@@ -23,7 +23,7 @@ namespace day6_8.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> GetAccData(Guid id)
+        public async Task<HttpResponseMessage> GetAccountData(Guid id)
         {
             IUser user = await UserService.GetUserAsync(id);
             if (user == null)
@@ -34,9 +34,9 @@ namespace day6_8.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> GetAllData()
+        public async Task<HttpResponseMessage> FindData([FromUri] UserFilter filterParams, [FromUri] UserSorter sortParams, [FromUri] DataPaging pageParams)
         {
-            List<IUser> users = await UserService.GetAllUserAsync();
+            List<IUser> users = await UserService.FindUserAsync(filterParams,sortParams,pageParams);
             if (users.Count == 0)
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound, "No Entries");

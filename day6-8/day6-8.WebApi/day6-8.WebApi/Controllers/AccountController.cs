@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using day6_8.Model.Common;
 using day6_8.Service.Common;
+using day6_8.Common;
 using AutoMapper;
 
 namespace day6_8.WebApi.Controllers
@@ -33,9 +34,9 @@ namespace day6_8.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> GetAllData()
+        public async Task<HttpResponseMessage> FindData([FromUri] AccountFilter filterParams, [FromUri] AccountSorter sortParams,[FromUri]DataPaging pageParams)
         {
-            List<IAccount> accounts = await AccountService.GetAllAccountAsync();
+            List<IAccount> accounts = await AccountService.FindAccountAsync(filterParams,sortParams,pageParams);
             if (accounts.Count == 0)
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound, "No Entries");

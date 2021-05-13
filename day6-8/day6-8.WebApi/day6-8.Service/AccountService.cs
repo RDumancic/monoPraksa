@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using day6_8.Model.Common;
 using day6_8.Service.Common;
 using day6_8.Repository.Common;
+using day6_8.Common;
 
 namespace day6_8.Service
 {
@@ -20,12 +21,12 @@ namespace day6_8.Service
 
         public async Task<IAccount> GetAccountAsync(Guid id)
         {
-            return await AccountRepository.PullDataAsync(id);
+            return await AccountRepository.PullDataByIDAsync(id);
         }
 
-        public async Task<List<IAccount>> GetAllAccountAsync()
+        public async Task<List<IAccount>> FindAccountAsync(AccountFilter filterParams, AccountSorter sortParams, DataPaging pageParams)
         {
-            return await AccountRepository.PullAllDataAsync();
+            return await AccountRepository.FindDataAsync(filterParams, sortParams, pageParams);
         }
 
         public async Task<string> InsertAccountAsync(IAccount data)

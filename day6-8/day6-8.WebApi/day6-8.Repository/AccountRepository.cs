@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using day6_8.Repository.Common;
 using day6_8.Model.Common;
-using day6_8.Model;
+using day6_8.Common;
 using System.Data.SqlClient;
 using AutoMapper;
 
@@ -21,7 +21,7 @@ namespace day6_8.Repository
             this.mapper = mapper;        
         }
 
-        public async Task<IAccount> PullDataAsync(Guid id)
+        public async Task<IAccount> PullDataByIDAsync(Guid id)
         {
             AccountEntity account = null;
 
@@ -42,11 +42,23 @@ namespace day6_8.Repository
             return mapper.Map<IAccount>(account);
         }
 
-        public async Task<List<IAccount>> PullAllDataAsync()
+        public async Task<List<IAccount>> FindDataAsync(AccountFilter filterParams, AccountSorter sortParams, DataPaging pageParams)
         {
             List<AccountEntity> accounts = new List<AccountEntity>();
+            string query = "SELECT * FROM Accounts";
+            string filter = filterParams.GetString();
+            query += filter;
 
-            SqlCommand sqlCmd = new SqlCommand("SELECT * FROM Accounts");
+            if (!sortParams.isNull())
+            {
+                query += " ORDER BY " + sortParams.SortBy + " " + sortParams.SortOrder;
+            }
+            // Offset represents page, that's why it defaults to 0 and it is multiplied with num of items per page
+            // Realized late that MSSQL doesn't have LIMIT and OFFSET but instead uses BETWEEN X AND Y so i left this implementation out
+            // and skipped paging for now, old implementation still commented below
+            //query += " LIMIT '" + pageParams.Limit.ToString() + "' OFFSET " + pageParams.Offset * pageParams.Limit;
+
+            SqlCommand sqlCmd = new SqlCommand(query);
             sqlCmd.Connection = myConnection;
 
             await myConnection.OpenAsync();

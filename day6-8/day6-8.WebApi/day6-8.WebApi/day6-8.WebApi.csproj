@@ -139,6 +139,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\day6-8.Common\day6-8.Common.csproj">
+      <Project>{92f1f4f0-e831-4583-ae77-112b0a729395}</Project>
+      <Name>day6-8.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\day6-8.Model.Common\day6-8.Model.Common.csproj">
       <Project>{291fa399-7fba-4da5-9fdf-c125dc83073b}</Project>
       <Name>day6-8.Model.Common</Name>

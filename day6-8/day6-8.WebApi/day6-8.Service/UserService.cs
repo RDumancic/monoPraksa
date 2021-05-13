@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using day6_8.Model.Common;
 using day6_8.Service.Common;
 using day6_8.Repository.Common;
+using day6_8.Common;
 
 namespace day6_8.Service
 {
@@ -18,12 +19,12 @@ namespace day6_8.Service
 
         public async Task<IUser> GetUserAsync(Guid id)
         {
-            return await UserRepository.PullDataAsync(id);
+            return await UserRepository.PullDataByIDAsync(id);
         }
 
-        public async Task<List<IUser>> GetAllUserAsync()
+        public async Task<List<IUser>> FindUserAsync(UserFilter filterParams, UserSorter sortParams, DataPaging pageParams)
         {
-            return await UserRepository.PullAllDataAsync();
+            return await UserRepository.FindDataAsync(filterParams,sortParams,pageParams);
         }
 
         public async Task<string> InsertUserAsync(IUser data)
