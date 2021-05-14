@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace day6_8.Common
 {
-    public class AccountSorter
+    public class AccountSorter : ISorter
     {
         private string sortOrder;
         private string sortBy;

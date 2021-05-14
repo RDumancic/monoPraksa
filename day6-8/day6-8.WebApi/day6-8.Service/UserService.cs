@@ -22,7 +22,7 @@ namespace day6_8.Service
             return await UserRepository.PullDataByIDAsync(id);
         }
 
-        public async Task<List<IUser>> FindUserAsync(UserFilter filterParams, UserSorter sortParams, DataPaging pageParams)
+        public async Task<List<IUser>> FindUserAsync(IUserFilter filterParams, ISorter sortParams, IDataPaging pageParams)
         {
             return await UserRepository.FindDataAsync(filterParams,sortParams,pageParams);
         }

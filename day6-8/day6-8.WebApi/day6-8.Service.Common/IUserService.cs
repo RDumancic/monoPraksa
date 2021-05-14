@@ -9,7 +9,7 @@ namespace day6_8.Service.Common
     public interface IUserService
     {
         Task<IUser> GetUserAsync(Guid id);
-        Task<List<IUser>> FindUserAsync(UserFilter filterParams, UserSorter sortParams, DataPaging pageParams);
+        Task<List<IUser>> FindUserAsync(IUserFilter filterParams, ISorter sortParams, IDataPaging pageParams);
         Task<string> InsertUserAsync(IUser data);
         Task<string> UpdateUserAsync(Guid id, IUser data);
         Task<string> DeleteUserAsync(Guid id);

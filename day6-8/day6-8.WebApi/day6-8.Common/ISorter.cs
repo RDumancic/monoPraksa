@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace day6_8.Common
 {
-    public class DataPaging : IDataPaging
+    public interface ISorter
     {
-        public int Limit { get; set; } = 3;
-        public int Offset { get; set; } = 0;
+        string SortOrder { get; set; }
+        string SortBy { get; set; }
+        bool isNull();
     }
 }

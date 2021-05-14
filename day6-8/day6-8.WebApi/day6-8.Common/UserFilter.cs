@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace day6_8.Common
 {
-    public class UserFilter
+    public class UserFilter : IUserFilter
     {
         public string Name { get; set; } = null;
 

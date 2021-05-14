@@ -24,7 +24,7 @@ namespace day6_8.Service
             return await AccountRepository.PullDataByIDAsync(id);
         }
 
-        public async Task<List<IAccount>> FindAccountAsync(AccountFilter filterParams, AccountSorter sortParams, DataPaging pageParams)
+        public async Task<List<IAccount>> FindAccountAsync(IAccountFilter filterParams, ISorter sortParams, IDataPaging pageParams)
         {
             return await AccountRepository.FindDataAsync(filterParams, sortParams, pageParams);
         }

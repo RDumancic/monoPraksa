@@ -44,6 +44,10 @@
     <Compile Include="AccountFilter.cs" />
     <Compile Include="AccountSorter.cs" />
     <Compile Include="DataPaging.cs" />
+    <Compile Include="IAccountFilter.cs" />
+    <Compile Include="ISorter.cs" />
+    <Compile Include="IDataPaging.cs" />
+    <Compile Include="IUserFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserFilter.cs" />
     <Compile Include="UserSorter.cs" />

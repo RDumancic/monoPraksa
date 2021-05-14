@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace day6_8.Common
 {
-    public class DataPaging : IDataPaging
+    public interface IDataPaging
     {
-        public int Limit { get; set; } = 3;
-        public int Offset { get; set; } = 0;
+        int Limit { get; set; }
+        int Offset { get; set; }
     }
 }

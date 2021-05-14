@@ -42,7 +42,7 @@ namespace day6_8.Repository
             return mapper.Map<IAccount>(account);
         }
 
-        public async Task<List<IAccount>> FindDataAsync(AccountFilter filterParams, AccountSorter sortParams, DataPaging pageParams)
+        public async Task<List<IAccount>> FindDataAsync(IAccountFilter filterParams, ISorter sortParams, IDataPaging pageParams)
         {
             List<AccountEntity> accounts = new List<AccountEntity>();
             string query = "SELECT * FROM Accounts";
@@ -57,6 +57,7 @@ namespace day6_8.Repository
             // Realized late that MSSQL doesn't have LIMIT and OFFSET but instead uses BETWEEN X AND Y so i left this implementation out
             // and skipped paging for now, old implementation still commented below
             //query += " LIMIT '" + pageParams.Limit.ToString() + "' OFFSET " + pageParams.Offset * pageParams.Limit;
+            //query += " OFFSET " + (pageParams.Offset * pageParams.Limit) + " ROWS FETCH NEXT " + pageParams.Limit + " ROWS ONLY";
 
             SqlCommand sqlCmd = new SqlCommand(query);
             sqlCmd.Connection = myConnection;

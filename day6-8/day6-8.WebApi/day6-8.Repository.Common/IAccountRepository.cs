@@ -9,7 +9,7 @@ namespace day6_8.Repository.Common
     public interface IAccountRepository
     {
         Task<IAccount> PullDataByIDAsync(Guid id);
-        Task<List<IAccount>> FindDataAsync(AccountFilter filterParams, AccountSorter sortParams, DataPaging pageParams);
+        Task<List<IAccount>> FindDataAsync(IAccountFilter filterParams, ISorter sortParams, IDataPaging pageParams);
         Task<string> InsertDataAsync(IAccount data);
         Task<string> UpdateDataAsync(Guid id, IAccount data);
         Task<string> DeleteDataAsync(Guid id);

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace day6_8.Common
 {
-    public class DataPaging : IDataPaging
+    public interface IUserFilter
     {
-        public int Limit { get; set; } = 3;
-        public int Offset { get; set; } = 0;
+        string Name { get; set; }
+        string GetString();
     }
 }
