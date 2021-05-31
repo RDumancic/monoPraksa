@@ -1,12 +1,15 @@
+import React, { Component } from "react";
 import Service from './Common/Service';
 
-function App() {
-  return (
-    <div className="App Container">
-      <h1>Accounts App</h1>
-      <Service />
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <div className="App Container mx-2">
+        <h1>Accounts App</h1>
+        <Service />
+      </div>
+    );
+  }
 }
 
 export default App;
